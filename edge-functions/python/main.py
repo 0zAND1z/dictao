@@ -11,8 +11,8 @@ myobj = {'key': os.environ['GMAPS_API_KEY']}
 
 moibit_url = 'https://kfs2.moibit.io/moibit/v0/storageused'
 header_obj = {
-    'api_key': "12D3KooWLtRAEGmwP8gcLPvik4CMvALxbkJZYsgK1upKCN8S8Hbp",
-    'api_secret': "08011240b7bd28b9eee900c6fe35ca6b26ff08259f1242984940521a7a0dc5d48a74c1b5a47a42f1b93fd9bb891e952c10981f57247e6a5f4f7da9abd56d1888641b0deb",
+    'api_key': os.environ['MOIBIT_API_KEY'],
+    'api_secret': os.environ['MOIBIT_API_SECRET'],
     'content-type': "application/json"
 }
 
