@@ -1,0 +1,15 @@
+{
+  "name": "edge-functions",
+  "version": "0.0.1",
+  "description": "Node script to get location data and publish it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "0zAND1z",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}
