@@ -3,6 +3,7 @@ import os
 import datetime
 import calendar
 import time
+import json
 
 Tracking_ID = ""
 
@@ -25,12 +26,15 @@ def WriteDataTOIPFS():
 
 def getGeoCordinates():
     res = requests.post(url, data=myobj)
+    print("HTTP RESPONSE STATUS: %d" % res.status_code)
     geoCordinates = res.json()['location']
-    accuracy = res.json()['accuracy']
+    # accuracy = res.json()['accuracy']
     print("Latitude: %s" % geoCordinates['lat'])
     print("Longitude: %s" % geoCordinates['lng'])
-    print("Accuracy of the location: %s (in metres)" % accuracy)
-    return (geoCordinates['lat'], geoCordinates['lng'], accuracy)
+    # print("Accuracy of the location: %s (in metres)" % accuracy)
+    lat = float("{:.7f}".format(geoCordinates['lat']))
+    long = float("{:.7f}".format(geoCordinates['lng']))
+    return (lat, long)
 
 
 def getCurrentTime():
@@ -38,18 +42,26 @@ def getCurrentTime():
 
     timestamp = time.mktime(dt.timetuple())
     print("Unix Timestamp: %d" % timestamp)
+    timestamp = int(timestamp)
     return timestamp
 
 
 def createID():
-    Tracking_ID = "a"
+    Tracking_ID = "SAMPLE-PET-ID-007"
     # TODO: Implement the creation of new ID using smart contract and persist it locally
     return Tracking_ID
 
 
-def Marshal(id, lat, long, accuracy, timestamp):
+def Marshal(Tracking_ID, lat, long, timestamp):
     # TODO: Implement JSON Marshal to create a JSON object
-    pass
+    # data_tuple_format = (id, lat, long, accuracy, timestamp)
+    data = {"id": Tracking_ID, 
+            "lat": lat, 
+            "long": long,
+            "timestamp": timestamp
+    }
+    json_data = json.dumps(data, indent=4, separators=(',', ': '), sort_keys=True)
+    return json_data
 
 
 def CommitTxn(id, cid):
@@ -62,18 +74,19 @@ def main():
     global Tracking_ID
     if Tracking_ID is "":
         Tracking_ID = createID()
-    print("Generated a new tracking ID: ", Tracking_ID)
+    # print("Generated a new tracking ID: ", Tracking_ID)
 
     # Getting the current geo-coordinates of the device
-    (lat, long, accuracy) = getGeoCordinates()
-    print("Received location data: ", lat, long, accuracy)
+    (lat, long) = getGeoCordinates()
+    # print("Received location data: ", lat, long)
 
     # Get the UTC based Unix timestamp of the device
     timestamp = getCurrentTime()
-    print("Got the current timestamp: ", timestamp)
+    # print("Got the current timestamp: ", timestamp)
 
     # Generate the JSON structure
-    # jsonData = Marshal(Tracking_ID, lat, long, accuracy, timestamp)
+    jsonData = Marshal(Tracking_ID, lat, long, timestamp)
+    print(jsonData)
 
     # Write the entry to IPFS
     # cid = WriteDataToIPFS(jsonData)
