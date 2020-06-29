@@ -49,8 +49,8 @@ def getCurrentTime():
 def Marshal(Tracking_ID, lat, long, timestamp):
     # data_tuple_format = (id, lat, long, accuracy, timestamp)
     data = {"id": Tracking_ID,
-            "lat": lat,
-            "long": long,
+            "latitude": lat,
+            "longitude": long,
             "timestamp": timestamp
             }
     # json_data = json.dumps(data, indent=4, separators=(',', ': '), sort_keys=True)
@@ -78,7 +78,7 @@ def CommitTxn(id, cid):
         cid,
     ).buildTransaction({
         'chainId': 42,
-        'gas': 75000,
+        'gas': 3000000,
         'gasPrice': w3.toWei('1', 'gwei'),
         'nonce': nonce,
     })
