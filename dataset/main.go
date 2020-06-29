@@ -67,7 +67,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if NewTuplesObject[index+1].ID != "BELLA" && index+1 < len(NewTuplesObject) {
 				NewTuplesObject[index+1].Timestamp = NewTuplesObject[index].Timestamp + 600
 
@@ -116,7 +116,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if NewTuplesObject[index+1].ID != "BUDDY" && index+1 < len(NewTuplesObject) {
 				NewTuplesObject[index+1].Timestamp = NewTuplesObject[index].Timestamp + 600
 
@@ -165,7 +165,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if NewTuplesObject[index+1].ID != "COCO" && index+1 < len(NewTuplesObject) {
 				NewTuplesObject[index+1].Timestamp = NewTuplesObject[index].Timestamp + 600
 
@@ -214,7 +214,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 < len(NewTuplesObject) {
 				if NewTuplesObject[index+1].ID != "LUCY" {
 					NewTuplesObject[index+1].Timestamp = NewTuplesObject[index].Timestamp + 600
@@ -265,7 +265,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if NewTuplesObject[index+1].ID != "MAX" && index+1 < len(NewTuplesObject) {
 				NewTuplesObject[index+1].Timestamp = NewTuplesObject[index].Timestamp + 600
 
@@ -314,7 +314,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 >= len(NewTuplesObject) {
 				continue
 			} else if NewTuplesObject[index+1].ID != "MILO" && index+1 < len(NewTuplesObject) {
@@ -364,7 +364,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 >= len(NewTuplesObject) {
 				continue
 			} else if NewTuplesObject[index+1].ID != "MOLLY" && index+1 < len(NewTuplesObject) {
@@ -414,7 +414,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 >= len(NewTuplesObject) {
 				continue
 			} else if NewTuplesObject[index+1].ID != "OSCAR" && index+1 < len(NewTuplesObject) {
@@ -464,7 +464,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 >= len(NewTuplesObject) {
 				continue
 			} else if NewTuplesObject[index+1].ID != "RUBY" && index+1 < len(NewTuplesObject) {
@@ -514,7 +514,7 @@ func main() {
 			}
 			prev = tuple.Timestamp
 			fmt.Println("At ", index, "found Tuple: ", tuple)
-			count += 1
+			count++
 			if index+1 >= len(NewTuplesObject) {
 				continue
 			} else if NewTuplesObject[index+1].ID != "SCOOBY" && index+1 < len(NewTuplesObject) {
