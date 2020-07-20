@@ -6,8 +6,13 @@ from web3 import Web3
 import web3
 import json
 import http
+from flask_cors import CORS
+import pandas as pd
+from sklearn.cluster import DBSCAN
+
 
 app = flask.Flask(__name__)
+CORS(app)
 app.config["DEBUG"] = True
 
 blockchain_url = 'https://kovan.infura.io/v3/' + \
@@ -22,7 +27,6 @@ moibit_header_obj = {
     'content-type': "application/json"
 }
 
-masterDataSet = []
 
 @app.route('/', methods=['GET'])
 def home():
@@ -38,8 +42,10 @@ def page_not_found(e):
 def internal_server_error(e):
     return e, 500
 
+
 @app.route('/api/v0/get_infections', methods=['GET'])
 def get_infections():
+    masterDataSet = []
     query_parameters = request.args
     if 'id' in query_parameters:
         id = query_parameters.get('id')
@@ -47,9 +53,9 @@ def get_infections():
         if getLatestCID(id) == "":
             return page_not_found(404)
         else:
-            # TODO: Find infections
             w3 = Web3(Web3.HTTPProvider(blockchain_url))
-            contract = w3.eth.contract(os.environ['PROOF_SMART_CONTRACT_ADDRESS'], abi=abi)
+            contract = w3.eth.contract(
+                os.environ['PROOF_SMART_CONTRACT_ADDRESS'], abi=abi)
             length = contract.functions.getDeviceIDsLength().call()
             print("Length of the deviceIDs: "+str(length))
             for i in range(length):
@@ -59,20 +65,64 @@ def get_infections():
                 # print(tempHash)
                 jsonData = getJsonDataFromMoiBit(tempHash)
                 # print(jsonData)
-                masterDataSet.append(jsonData)
+                for location in jsonData:
+                    masterDataSet.append(location)
             print("Generated live dataset of length: %d" % len(masterDataSet))
-            return(jsonify(masterDataSet))
-            # results = []
-            # return (jsonify(results))
+            try:
+                with open('live_dataset.json', 'x') as outfile:
+                    json.dump(masterDataSet, outfile, indent=2)
+            except FileExistsError:
+                os.remove('live_dataset.json')
+                print("File Removed!")
+                with open('live_dataset.json', 'x') as outfile:
+                    json.dump(masterDataSet, outfile, indent=2)
+            results = get_infected_ids(id)
+            os.remove("live_dataset.json")
+            response = {
+                "id": id,
+                "potential_infected_ids": results
+            }
+            return (jsonify(response))
     else:
         return "Error: Please specify an ID to identify potential infections."
+
+
+def get_infected_ids(input_id):
+    basePath = os.path.dirname(os.path.abspath('live_dataset.json'))
+    dflive = pd.read_json(basePath + '/' + 'live_dataset.json')
+
+    epsilon = 0.0018288 # a radial distance of 6 feet, which is medically presribed
+    min_sample = 2
+    model = DBSCAN(eps=epsilon, min_samples=min_sample, metric='haversine').fit(dflive[['latitude', 'longitude']])
+    dflive['cluster'] = model.labels_.tolist()
+
+    input_id_clusters = []
+    for i in range(len(dflive)):
+        if dflive['id'][i] == input_id:
+            if dflive['cluster'][i] in input_id_clusters:
+                pass
+            else:
+                input_id_clusters.append(dflive['cluster'][i])
+#     print(input_id_clusters)
+    
+    infected_ids = []
+    for cluster in input_id_clusters:
+        if cluster != -1:
+            ids_in_cluster = dflive.loc[dflive['cluster'] == cluster, 'id']
+            for i in range(len(ids_in_cluster)):
+                member_id = ids_in_cluster.iloc[i]
+                if (member_id not in infected_ids) and (member_id != input_id):
+                    infected_ids.append(member_id)
+                else:
+                    pass
+    return infected_ids
 
 
 def getJsonDataFromMoiBit(cid):
     pre_payload = {"hash": cid}
     payload = json.dumps(pre_payload)
     conn.request("POST", moibit_url+"readfilebyhash",
-                    payload, moibit_header_obj)
+                 payload, moibit_header_obj)
     res = conn.getresponse()
     if res.status == 200:
         responseObject = json.loads(res.read())
