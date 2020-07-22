@@ -37,6 +37,9 @@
                     else if (ajaxRequest.status == 404) {
                         alert("Please check the entered ID again!")
                     }
+                    else if (ajaxRequest.status == 500) {
+                        alert("Internal server ocurred. Please try again!")
+                    }
                 }
             }
             ajaxRequest.open('GET', 'http://127.0.0.1:5000/api/v0/get_infections?id=' + input_id);
@@ -53,7 +56,7 @@
         </div>
         <div class="row justify-content-md-center">
             <div class="col-md-auto">
-                <p><input type="text" id="input_id" name="input_id" placeholder="Enter suspected ID">
+                <p><input type="text" id="input_id" name="input_id" placeholder="Enter suspected ID" size="42">
                     <button type="button" class="btn btn-primary" onclick="getInfectedIDs()">Get potentially infected IDs</button>
                 </p>
             </div>
